@@ -1,7 +1,6 @@
 
 
 #include "../include/roboclaw.h"
-#include "../include/conio.h"
 
 #include <stdio.h>  //printf
 #include <stdlib.h> //exit
@@ -9,11 +8,6 @@
 #include <iostream>
 
 using namespace std;
-
-#define KEY_UP 72
-#define KEY_DOWN 80
-#define KEY_LEFT 75
-#define KEY_RIGHT 77
 
 void usage(char **argv);
 void informative_terminate(struct roboclaw  *rc);
@@ -62,55 +56,27 @@ int main(int argc, char **argv)
 	{
 		cout<<"Enter motor speed [-100, 100] or 'q'  to quit"<<endl;
 
-        switch((c=getch())) {
-        case KEY_UP:
-            cout << endl << "Up" << endl;//key up
+		cin>>motor_control;
+		if(motor_control==8){
 			motor1_speed=30;
-			motor2_speed=30;			
-            // break;
-        case KEY_DOWN:
-            cout << endl << "Down" << endl;   // key down
+			motor2_speed=30;	
+		}
+		else if(motor_control==2){
 			motor1_speed=-30;
-			motor2_speed=-30;
-            // break;
-        case KEY_LEFT:
-            cout << endl << "Left" << endl;  // key left
+			motor2_speed=-30;				
+		}
+		else if(motor_control==4){
 			motor1_speed=-30;
-			motor2_speed=30;		
-            // break;
-        case KEY_RIGHT:
-            cout << endl << "Right" << endl;  // key right
+			motor2_speed=30;				
+		}
+		else if(motor_control==6){
 			motor1_speed=30;
-			motor2_speed=-30;	
-            // break;
-        default:
-            cout << endl << "null" << endl;  // not arrow
+			motor2_speed=-30;				
+		}
+		else{
 			motor1_speed=0;
-			motor2_speed=0;		
-            break;
-        }
-
-		// cin>>motor_control;
-		// if(motor_control==8){
-		// 	motor1_speed=30;
-		// 	motor2_speed=30;	
-		// }
-		// else if(motor_control==2){
-		// 	motor1_speed=-30;
-		// 	motor2_speed=-30;				
-		// }
-		// else if(motor_control==4){
-		// 	motor1_speed=-30;
-		// 	motor2_speed=30;				
-		// }
-		// else if(motor_control==6){
-		// 	motor1_speed=30;
-		// 	motor2_speed=-30;				
-		// }
-		// else{
-		// 	motor1_speed=0;
-		// 	motor2_speed=0;				
-		// }
+			motor2_speed=0;				
+		}
 		// 3500 is the max limit set for now 
 		motor1_speed=(float)motor1_speed/100.0f*3500;
 		motor2_speed=(float)motor2_speed/100.0f*3500;
