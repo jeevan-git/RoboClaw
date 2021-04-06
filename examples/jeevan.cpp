@@ -1,32 +1,7 @@
-/*
- * roboclaw-test example for roboclaw library
- *
- * Copyright 2018 (C) Bartosz Meglicki <meglickib@gmail.com>
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- */
 
-/*
- *  This example:
- *  -initializes communication with roboclaw unit
- *  -reads & prints battery voltage
- *  -in a loop
- *    - reads duty cycle from user [-100, 100]%
- *    - sets this duty cycle to motors
- *    - breaks the loop on non numeric input
- *  -stops the motors
- *  -cleans after library
- *
- *  Program expects terminal device, baudrate and roboclaw address (from 0x80 to 0x87, ignored in USB mode) e.g.
- *
- *  roboclaw-test /dev/ttyACM0 38400 0x80
- *
- */
 
 #include "../include/roboclaw.h"
+#include "../include/conio.h"
 
 #include <stdio.h>  //printf
 #include <stdlib.h> //exit
@@ -34,6 +9,12 @@
 #include <iostream>
 
 using namespace std;
+
+#define KEY_UP 72
+#define KEY_DOWN 80
+#define KEY_LEFT 75
+#define KEY_RIGHT 77
+
 void usage(char **argv);
 void informative_terminate(struct roboclaw  *rc);
 
@@ -44,6 +25,7 @@ int main(int argc, char **argv)
 	int16_t voltage;
 	float voltage_float;
 	int baudrate, duty_cycle, motor1_speed, motor2_speed, motor_control;
+	int c=0;
 
 	cout<<"The value of the argc is: "<<argc<<endl;
 	if(argc != 4)
@@ -80,57 +62,66 @@ int main(int argc, char **argv)
 	{
 		cout<<"Enter motor speed [-100, 100] or 'q'  to quit"<<endl;
 
-		// if( scanf("%d", &duty_cycle) < 1 )
-		// 	break;
-		// if( duty_cycle > 100 )
-		// 	duty_cycle = 100;
-		// if( duty_cycle < -100 )
-		// 	duty_cycle = -100;
+        switch((c=getch())) {
+        case KEY_UP:
+            cout << endl << "Up" << endl;//key up
+			motor1_speed=30;
+			motor2_speed=30;			
+            // break;
+        case KEY_DOWN:
+            cout << endl << "Down" << endl;   // key down
+			motor1_speed=-30;
+			motor2_speed=-30;
+            // break;
+        case KEY_LEFT:
+            cout << endl << "Left" << endl;  // key left
+			motor1_speed=-30;
+			motor2_speed=30;		
+            // break;
+        case KEY_RIGHT:
+            cout << endl << "Right" << endl;  // key right
+			motor1_speed=30;
+			motor2_speed=-30;	
+            // break;
+        default:
+            cout << endl << "null" << endl;  // not arrow
+			motor1_speed=0;
+			motor2_speed=0;		
+            break;
+        }
 
-		// //32767 is max duty cycle setpoint that roboclaw accepts
-		// duty_cycle = (float)duty_cycle/100.0f * 32767;
-		// // Sending the pwm signals to the motor
-		// int test = roboclaw_duty_m1m2(rc, address, duty_cycle, duty_cycle);
-
-		// if(test != ROBOCLAW_OK )
-		// {
-		// 	fprintf(stderr, "problem communicating with roboclaw, terminating\n");
-		// 	break;
+		// cin>>motor_control;
+		// if(motor_control==8){
+		// 	motor1_speed=30;
+		// 	motor2_speed=30;	
 		// }
+		// else if(motor_control==2){
+		// 	motor1_speed=-30;
+		// 	motor2_speed=-30;				
+		// }
+		// else if(motor_control==4){
+		// 	motor1_speed=-30;
+		// 	motor2_speed=30;				
+		// }
+		// else if(motor_control==6){
+		// 	motor1_speed=30;
+		// 	motor2_speed=-30;				
+		// }
+		// else{
+		// 	motor1_speed=0;
+		// 	motor2_speed=0;				
+		// }
+		// 3500 is the max limit set for now 
+		motor1_speed=(float)motor1_speed/100.0f*3500;
+		motor2_speed=(float)motor2_speed/100.0f*3500;
+		// Sending the speed to the motor
+		int test=roboclaw_speed_m1m2(rc, address, motor1_speed, motor2_speed);
 
-			// if(scanf("%d", &motor_speed)<1)
-			// 	break;
-			// if(motor_speed>100)
-			// 	motor_speed=100;
-			// if(motor_speed<-100)
-			// 	motor_speed=-100;
-
-			cin>>motor_control;
-			if(motor_control==8){
-				motor1_speed=30;
-				motor2_speed=30;	
-			}
-			else if(motor_control==2){
-				motor1_speed=-30;
-				motor2_speed=-30;				
-			}
-			else if(motor_control==4){
-				motor1_speed=-30;
-				motor2_speed=30;				
-			}
-			else if(motor_control==6){
-				motor1_speed=30;
-				motor2_speed=-30;				
-			}
-			else{
-				motor1_speed=0;
-				motor2_speed=0;				
-			}
-			// 3500 is the max limit set for now 
-			motor1_speed=(float)motor1_speed/100.0f*3500;
-			motor2_speed=(float)motor2_speed/100.0f*3500;
-			// Sending the speed to the motor
-			roboclaw_speed_m1m2(rc, address, motor1_speed, motor2_speed);
+		if(test != ROBOCLAW_OK )
+		{
+			fprintf(stderr, "problem communicating with roboclaw, terminating\n");
+			break;
+		}			
 	}
 
 	//make sure the motors are stopped before leaving
