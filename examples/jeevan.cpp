@@ -43,7 +43,8 @@ int main(int argc, char **argv)
 	uint8_t address=0x82;
 	int16_t voltage;
 	float voltage_float;
-	int baudrate, duty_cycle, motor_speed;
+	int baudrate, duty_cycle, motor1_speed, motor2_speed, motor_control;
+
 	cout<<"The value of the argc is: "<<argc<<endl;
 	if(argc != 4)
 	{
@@ -97,17 +98,39 @@ int main(int argc, char **argv)
 		// 	break;
 		// }
 
-			if(scanf("%d", &motor_speed)<1)
-				break;
-			if(motor_speed>100)
-				motor_speed=100;
-			if(motor_speed<-100)
-				motor_speed=-100;
+			// if(scanf("%d", &motor_speed)<1)
+			// 	break;
+			// if(motor_speed>100)
+			// 	motor_speed=100;
+			// if(motor_speed<-100)
+			// 	motor_speed=-100;
 
+			cin>>motor_control;
+			if(motor_control==8){
+				motor1_speed=30;
+				motor2_speed=30;	
+			}
+			else if(motor_control==2){
+				motor1_speed=-30;
+				motor2_speed=-30;				
+			}
+			else if(motor_control==4){
+				motor1_speed=-30;
+				motor2_speed=30;				
+			}
+			else if(motor_control==6){
+				motor1_speed=30;
+				motor2_speed=-30;				
+			}
+			else{
+				motor1_speed=0;
+				motor2_speed=0;				
+			}
 			// 3500 is the max limit set for now 
-			motor_speed=(float)motor_speed/100.0f*3500;
+			motor1_speed=(float)motor1_speed/100.0f*3500;
+			motor2_speed=(float)motor2_speed/100.0f*3500;
 			// Sending the speed to the motor
-			roboclaw_speed_m1m2(rc, address, motor_speed, motor_speed);
+			roboclaw_speed_m1m2(rc, address, motor1_speed, motor2_speed);
 	}
 
 	//make sure the motors are stopped before leaving

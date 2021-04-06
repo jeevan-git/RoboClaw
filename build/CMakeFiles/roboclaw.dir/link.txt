@@ -1,0 +1,2 @@
+/usr/bin/ar qc libroboclaw.a  CMakeFiles/roboclaw.dir/library/roboclaw.c.o
+/usr/bin/ranlib libroboclaw.a

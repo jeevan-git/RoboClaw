@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/helper/Cpp/roboclaw_driver/RoboClaw/include/roboclaw.h
+stdint.h
+-
+
+/home/helper/Cpp/roboclaw_driver/RoboClaw/library/roboclaw.c
+../include/roboclaw.h
+/home/helper/Cpp/roboclaw_driver/RoboClaw/include/roboclaw.h
+stdint.h
+-
+unistd.h
+-
+fcntl.h
+-
+termios.h
+-
+assert.h
+-
+endian.h
+-
+string.h
+-
+sys/select.h
+-
+malloc.h
+-
+errno.h
+-
+
