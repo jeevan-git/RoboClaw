@@ -1,1 +1,0 @@
-/usr/bin/c++    -rdynamic CMakeFiles/roboclaw_test.dir/examples/jeevan.cpp.o  -o roboclaw_test  libroboclaw.a 
